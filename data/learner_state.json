@@ -1,0 +1,7 @@
+{
+  "action_trust": {
+    "limit_retries": 0.55,
+    "throttle_issuer": 0.5,
+    "increase_timeout": 0.5
+  }
+}

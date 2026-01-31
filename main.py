@@ -14,7 +14,7 @@ def main():
     print("Agent started\n")
     reasoner = Reasoner()
     env = PaymentEnvironment()
-    observer = Observer()
+    observer = Observer(window_size=20)
     decision = Decision()
     executor = Executor()
     learner = Learner()
@@ -45,7 +45,7 @@ def main():
         f"evidence={b['evidence']}"
     )
 
-    decision_out = decision.decide(result)
+    decision_out = decision.decide(result, learner.action_trust)
 
     print("\n--- DECISION OUTPUT ---")
     for r in decision_out["recommendations"]:

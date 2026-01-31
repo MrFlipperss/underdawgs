@@ -2,7 +2,11 @@ from collections import defaultdict, deque
 import statistics
 
 class Observer:
-    def __init__(self, window_size=5E0):
+    def __init__(self, window_size: int = 20):
+        if not isinstance(window_size, int):
+            raise ValueError("window_size must be an integer")
+
+        self.window_size = window_size
         self.window = deque(maxlen=window_size)
 
     def consume(self, event):

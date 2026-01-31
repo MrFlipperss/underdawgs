@@ -5,7 +5,7 @@ class Decision:
     Converts beliefs into recommended actions with guardrails.
     """
 
-    def decide(self, reasoning: Dict) -> Dict:
+    def decide(self, reasoning: Dict, action_trust: Dict) -> Dict:
         beliefs = reasoning["beliefs"]
 
         recommendations = []
@@ -13,6 +13,19 @@ class Decision:
         for belief in beliefs:
             name = belief["hypothesis"]
             confidence = belief["confidence"]
+            
+            # Scale confidence by learned trust (default neutral = 1.0)
+            trust = action_trust.get(
+                {
+                    "issuer_degradation": "throttle_issuer",
+                    "network_instability": "increase_timeout",
+                    "retry_storm_risk": "limit_retries",
+                }.get(name, ""),
+                1.0
+            )
+
+            confidence = round(confidence * trust, 2)
+            
             evidence = belief["evidence"]
 
             # --- Guardrails ---
@@ -45,7 +58,7 @@ class Decision:
                     )
                 )
 
-            elif name == "retry_storm_risk":
+            elif name == "retry_storm_risk" and confidence > 0.2:
                 recommendations.append(
                     self._recommend(
                         action="limit_retries",
