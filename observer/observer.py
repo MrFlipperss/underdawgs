@@ -2,7 +2,7 @@ from collections import defaultdict, deque
 import statistics
 
 class Observer:
-    def __init__(self, window_size=50):
+    def __init__(self, window_size=5E0):
         self.window = deque(maxlen=window_size)
 
     def consume(self, event):
